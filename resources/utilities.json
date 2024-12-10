@@ -1,0 +1,5 @@
+{
+    "Connect to Earbuds": "connect2buds",
+    "Connect to WiFi": "nmcli connection up Caio",
+    "Connect to Hotspot": "nmcli connection up wannacry.scr"
+}

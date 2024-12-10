@@ -1,0 +1,8 @@
+[package]
+name = "utilitymenu"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cursive = { version = "0.21.1", features = ["toml"] }
+json = "0.12.4"
