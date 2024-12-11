@@ -3,11 +3,12 @@
 use std::{
     fs::File,
     process::{Command, Output},
+    str,
 };
 use std::io::prelude::*;
 
 use json;
-use cursive::views::{ListView, Button};
+use cursive::views::{ListView, Button, Dialog, TextView};
 use cursive::{Cursive, CursiveExt};
 
 fn open_json() -> std::io::Result<String> {
@@ -18,11 +19,24 @@ fn open_json() -> std::io::Result<String> {
 }
 
 fn run_command(siv: &mut Cursive, command: String) {
-    let _cmd_output = Command::new("sh")
+    let cmd_output = Command::new("sh")
         .arg("-c")
         .arg(command)
-        .output();
-    siv.quit();
+        .output()
+        .expect("Could not run the command");
+
+    let mut cmd_dialog: Dialog = Dialog::new();
+    let text_output = TextView::new(
+        str::from_utf8(&cmd_output.stdout).unwrap()
+    );
+
+    cmd_dialog.set_content(
+        text_output
+    );
+
+    siv.add_layer(cmd_dialog);
+
+    //siv.quit();
 }
 
 fn populate_list(entries: json::iterators::Entries) -> ListView {
@@ -55,10 +69,6 @@ fn main() {
     let list_view: ListView = populate_list(entries);
     siv.add_layer(list_view);
 
-    /*
-    * why are we still here?
-    * just to suffer?
-    */
     siv.add_global_callback('q', |s| s.quit());
     siv.run();
 }
