@@ -24,10 +24,19 @@ fn run_command(siv: &mut Cursive, command: String) {
         .arg(command)
         .output()
         .expect("Could not run the command");
+    let stdout: &str = str::from_utf8(&cmd_output.stdout).unwrap();
+    let stderr: &str = str::from_utf8(&cmd_output.stderr).unwrap();
 
     let mut cmd_dialog: Dialog = Dialog::new();
+
+    let display_string = if stderr.len() > 0 {
+        stderr
+    } else {
+        stdout
+    };
+
     let text_output = TextView::new(
-        str::from_utf8(&cmd_output.stdout).unwrap()
+        display_string
     );
 
     cmd_dialog.set_content(
